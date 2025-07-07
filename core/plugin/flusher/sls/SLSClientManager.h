@@ -63,7 +63,7 @@ private:
     virtual void GenerateUserAgent();
 
 #ifdef APSARA_UNIT_TEST_MAIN
-    friend class SLSClientManagerUnittest;
+    friend class FlusherSLSUnittest;
 #endif
 };
 
