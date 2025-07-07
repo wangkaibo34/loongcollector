@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "plugin/flusher/sls/SLSClientManager.h"
+
 #include "boost/config.hpp"
 
 #ifdef __linux__
