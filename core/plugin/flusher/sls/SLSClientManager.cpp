@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "plugin/flusher/sls/SLSClientManager.h"
+#include "boost/config.hpp"
 
 #ifdef __linux__
 #include <sys/utsname.h>
@@ -53,14 +54,22 @@ SLSClientManager* SLSClientManager::GetInstance() {
 
 void SLSClientManager::Init() {
     GenerateUserAgent();
-    mCredentialsProvider = std::make_unique<StaticCredentialsProvider>(STRING_FLAG(default_access_key_id),
-                                                                       STRING_FLAG(default_access_key));
+    auto staticProvider = std::make_unique<StaticCredentialsProvider>(STRING_FLAG(default_access_key_id),
+                                                                      STRING_FLAG(default_access_key));
+    staticProvider->SetAuthType(AuthType::AK);
+    mCredentialsProvider = std::move(staticProvider);
 }
 
 bool SLSClientManager::GetAccessKey(
     const string& aliuid, AuthType& type, string& accessKeyId, string& accessKeySecret, std::string& secToken) {
-    type = AuthType::AK;
-    return mCredentialsProvider->GetCredentials(type, accessKeyId, accessKeySecret, secToken);
+    if (BOOST_LIKELY(!mCredentialsProvider)) {
+        return mCredentialsProvider->GetCredentials(type, accessKeyId, accessKeySecret, secToken);
+    } else {
+        accessKeyId = STRING_FLAG(default_access_key_id);
+        accessKeySecret = STRING_FLAG(default_access_key);
+        type = AuthType::AK;
+        return true;
+    }
 }
 
 void SLSClientManager::GenerateUserAgent() {
