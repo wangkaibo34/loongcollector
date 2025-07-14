@@ -24,15 +24,14 @@ enum class AuthType { ANONYMOUS, AK, STS };
 class CredentialsProvider {
 public:
     CredentialsProvider() = default;
-    CredentialsProvider(const std::string& accessKeyId, const std::string& accessKeySecret)
-        : mAccessKeyId(accessKeyId), mAccessKeySecret(accessKeySecret) {}
     virtual ~CredentialsProvider() = default;
 
     virtual bool
     GetCredentials(AuthType& type, std::string& accessKeyId, std::string& accessKeySecret, std::string& secToken)
         = 0;
-
     uint32_t GetErrorCnt() { return mErrorCnt; }
+    // Record the number of errors using credentails. The caller can reset the provider or do something else based on
+    // the number of errors.
     void SetErrorCnt(uint32_t cnt) { mErrorCnt = cnt; }
 
 protected:
@@ -44,21 +43,14 @@ protected:
 
 class StaticCredentialsProvider : public CredentialsProvider {
 public:
-    StaticCredentialsProvider(const std::string& accessKeyId, const std::string& accessKeySecret)
-        : CredentialsProvider(accessKeyId, accessKeySecret) {}
+    StaticCredentialsProvider(const std::string& accessKeyId, const std::string& accessKeySecret);
 
     bool GetCredentials(AuthType& type,
                         std::string& accessKeyId,
                         std::string& accessKeySecret,
-                        std::string& secToken) override {
-        type = mAuthType;
-        accessKeyId = mAccessKeyId;
-        accessKeySecret = mAccessKeySecret;
-        secToken = mSecToken;
-        return true;
-    }
+                        std::string& secToken) override;
 
-    void SetAuthType(AuthType type) { mAuthType = type; }
+    void SetAuthType(AuthType type);
 
 private:
     AuthType mAuthType = AuthType::AK;
