@@ -63,7 +63,7 @@ void SLSClientManager::Init() {
 
 bool SLSClientManager::GetAccessKey(
     const string& aliuid, AuthType& type, string& accessKeyId, string& accessKeySecret, std::string& secToken) {
-    if (BOOST_LIKELY(!mCredentialsProvider)) {
+    if (BOOST_LIKELY(mCredentialsProvider != nullptr)) {
         return mCredentialsProvider->GetCredentials(type, accessKeyId, accessKeySecret, secToken);
     } else {
         accessKeyId = STRING_FLAG(default_access_key_id);
