@@ -19,6 +19,8 @@
 #include <common/StringView.h>
 #include <string.h>
 
+#include <array>
+
 #include "json/value.h"
 
 extern const std::string sInstanceIdKey;
