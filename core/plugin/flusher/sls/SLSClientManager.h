@@ -64,7 +64,6 @@ private:
 
 #ifdef APSARA_UNIT_TEST_MAIN
     friend class SLSClientManagerUnittest;
-    friend class FlusherSLSUnittest;
 #endif
 };
 
@@ -115,13 +114,11 @@ void PreparePostAPMBackendRequest(const std::string& accessKeyId,
                                   const std::string& host,
                                   bool isHostIp,
                                   const std::string& project,
-                                  const std::string& logstore,
                                   const std::string& compressType,
                                   RawDataType dataType,
                                   const std::string& body,
                                   size_t rawSize,
                                   const std::string& path,
-                                  std::string& query,
                                   std::map<std::string, std::string>& header);
 SLSResponse PostLogStoreLogs(const std::string& accessKeyId,
                              const std::string& accessKeySecret,
@@ -154,12 +151,12 @@ SLSResponse PostAPMBackendLogs(const std::string& accessKeyId,
                                const std::string& host,
                                bool httpsFlag,
                                const std::string& project,
-                               const std::string& logstore,
                                const std::string& compressType,
                                RawDataType dataType,
                                const std::string& body,
                                size_t rawSize,
-                               const std::string& subpath);
+                               const std::string& subpath,
+                               std::map<std::string, std::string>& header);
 SLSResponse PutWebTracking(const std::string& host,
                            bool httpsFlag,
                            const std::string& logstore,

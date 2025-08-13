@@ -16,6 +16,8 @@
 
 #include "boost/config.hpp"
 
+#include "CredentialsProvider.h"
+
 #ifdef __linux__
 #include <sys/utsname.h>
 #endif
@@ -63,14 +65,7 @@ void SLSClientManager::Init() {
 
 bool SLSClientManager::GetAccessKey(
     const string& aliuid, AuthType& type, string& accessKeyId, string& accessKeySecret, std::string& secToken) {
-    if (BOOST_LIKELY(mCredentialsProvider != nullptr)) {
-        return mCredentialsProvider->GetCredentials(type, accessKeyId, accessKeySecret, secToken);
-    } else {
-        accessKeyId = STRING_FLAG(default_access_key_id);
-        accessKeySecret = STRING_FLAG(default_access_key);
-        type = AuthType::AK;
-        return true;
-    }
+    return mCredentialsProvider->GetCredentials(type, accessKeyId, accessKeySecret, secToken);
 }
 
 void SLSClientManager::GenerateUserAgent() {
@@ -190,8 +185,7 @@ void PreparePostLogStoreLogsRequest(const string& accessKeyId,
     }
     if (type == AuthType::ANONYMOUS) {
         header[X_LOG_KEYPROVIDER] = MD5_SHA1_SALT_KEYPROVIDER;
-    }
-    if (!secToken.empty()) {
+    } else if (type == AuthType::STS) {
         header[X_ACS_SECURITY_TOKEN] = secToken;
     }
 
@@ -238,8 +232,7 @@ void PreparePostHostMetricsRequest(const string& accessKeyId,
     }
     if (type == AuthType::ANONYMOUS) {
         header[X_LOG_KEYPROVIDER] = MD5_SHA1_SALT_KEYPROVIDER;
-    }
-    if (!secToken.empty()) {
+    } else if (type == AuthType::STS) {
         header[X_ACS_SECURITY_TOKEN] = secToken;
     }
 
@@ -282,8 +275,7 @@ void PreparePostMetricStoreLogsRequest(const string& accessKeyId,
     header[X_LOG_BODYRAWSIZE] = to_string(rawSize);
     if (type == AuthType::ANONYMOUS) {
         header[X_LOG_KEYPROVIDER] = MD5_SHA1_SALT_KEYPROVIDER;
-    }
-    if (!secToken.empty()) {
+    } else if (type == AuthType::STS) {
         header[X_ACS_SECURITY_TOKEN] = secToken;
     }
 
@@ -299,13 +291,11 @@ void PreparePostAPMBackendRequest(const string& accessKeyId,
                                   const string& host,
                                   bool isHostIp,
                                   const string& project,
-                                  const string& logstore,
                                   const string& compressType,
                                   RawDataType dataType,
                                   const string& body,
                                   size_t rawSize,
                                   const string& path,
-                                  string& query,
                                   map<string, string>& header) {
     if (isHostIp) {
         header[HOST] = project + "." + host;
@@ -330,8 +320,7 @@ void PreparePostAPMBackendRequest(const string& accessKeyId,
     }
     if (type == AuthType::ANONYMOUS) {
         header[X_LOG_KEYPROVIDER] = MD5_SHA1_SALT_KEYPROVIDER;
-    }
-    if (!secToken.empty()) {
+    } else if (type == AuthType::STS) {
         header[X_ACS_SECURITY_TOKEN] = secToken;
     }
 
@@ -418,14 +407,12 @@ SLSResponse PostAPMBackendLogs(const string& accessKeyId,
                                const string& host,
                                bool httpsFlag,
                                const string& project,
-                               const string& logstore,
                                const string& compressType,
                                RawDataType dataType,
                                const string& body,
                                size_t rawSize,
-                               const std::string& subpath) {
-    string query;
-    map<string, string> header;
+                               const std::string& subpath,
+                               std::map<std::string, std::string>& header) {
     PreparePostAPMBackendRequest(accessKeyId,
                                  accessKeySecret,
                                  secToken,
@@ -433,13 +420,11 @@ SLSResponse PostAPMBackendLogs(const string& accessKeyId,
                                  host,
                                  false, // sync request always uses vip
                                  project,
-                                 logstore,
                                  compressType,
                                  dataType,
                                  body,
                                  rawSize,
                                  subpath,
-                                 query,
                                  header);
     HttpResponse response;
     SendHttpRequest(

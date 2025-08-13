@@ -57,6 +57,23 @@ std::string GetTimeStamp(time_t t, const std::string& format) {
     return (0 == ret) ? "" : std::string(buf, ret);
 }
 
+std::string GetGmTimeStamp(time_t t, const std::string& format) {
+    if (0 == strcmp(format.c_str(), "%s")) {
+        return t <= 0 ? "" : std::to_string(t);
+    }
+    struct tm timeInfo;
+#if defined(__linux__)
+    if (NULL == gmtime_r(&t, &timeInfo))
+        return "";
+#elif defined(_MSC_VER)
+    if (0 != gmtime_s(&timeInfo, &t))
+        return "";
+#endif
+    char buf[256];
+    auto ret = strftime(buf, 256, format.c_str(), &timeInfo);
+    return (0 == ret) ? "" : std::string(buf, ret);
+}
+
 uint64_t GetCurrentTimeInMicroSeconds() {
     return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch())
         .count();
