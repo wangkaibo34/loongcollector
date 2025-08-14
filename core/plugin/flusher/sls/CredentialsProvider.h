@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <atomic> // 添加原子操作头文件
 #include <string>
 
 namespace logtail {
@@ -27,15 +28,19 @@ public:
     virtual ~CredentialsProvider() = default;
 
     virtual bool
-    GetCredentials(AuthType& type, std::string& accessKeyId, std::string& accessKeySecret, std::string& secToken)
+    GetCredentials(AuthType& type, std::string& accessKeyId, std::string& accessKeySecret, std::string& secToken) const
         = 0;
-    uint32_t GetErrorCnt() { return mErrorCnt; }
+
     // Record the number of errors using credentails. The caller can reset the provider or do something else based on
     // the number of errors.
-    void SetErrorCnt(uint32_t cnt) { mErrorCnt = cnt; }
+    uint32_t GetErrorCnt() const { return mErrorCnt.load(); }
+
+    void IncrementErrorCnt() { mErrorCnt.fetch_add(1); }
+
+    void ResetErrorCnt() { mErrorCnt.store(0); }
 
 protected:
-    uint32_t mErrorCnt = 0;
+    std::atomic<uint32_t> mErrorCnt{0};
     std::string mAccessKeyId;
     std::string mAccessKeySecret;
     std::string mSecToken;
@@ -48,7 +53,7 @@ public:
     bool GetCredentials(AuthType& type,
                         std::string& accessKeyId,
                         std::string& accessKeySecret,
-                        std::string& secToken) override;
+                        std::string& secToken) const override;
 
     void SetAuthType(AuthType type);
 

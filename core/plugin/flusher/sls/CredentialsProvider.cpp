@@ -26,7 +26,7 @@ StaticCredentialsProvider::StaticCredentialsProvider(const std::string& accessKe
 bool StaticCredentialsProvider::GetCredentials(AuthType& type,
                                                std::string& accessKeyId,
                                                std::string& accessKeySecret,
-                                               std::string& secToken) {
+                                               std::string& secToken) const {
     type = mAuthType;
     accessKeyId = mAccessKeyId;
     accessKeySecret = mAccessKeySecret;
