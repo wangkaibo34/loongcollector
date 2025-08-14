@@ -44,6 +44,12 @@ inline void SetID(const std::string& id, std::array<char, N>& target, size_t& ta
         targetLen = 0;
         return;
     }
+
+    if (N == 0) {
+        targetLen = 0;
+        return;
+    }
+
     targetLen = std::min(id.size(), N - 1);
     std::memcpy(target.data(), id.data(), targetLen);
     target[targetLen] = '\0';
