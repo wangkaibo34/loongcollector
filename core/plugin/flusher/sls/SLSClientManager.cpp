@@ -16,8 +16,6 @@
 
 #include "boost/config.hpp"
 
-#include "CredentialsProvider.h"
-
 #ifdef __linux__
 #include <sys/utsname.h>
 #endif

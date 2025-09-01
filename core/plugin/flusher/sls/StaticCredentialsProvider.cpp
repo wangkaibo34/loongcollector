@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "plugin/flusher/sls/CredentialsProvider.h"
+#include "plugin/flusher/sls/StaticCredentialsProvider.h"
 
 using namespace std;
 namespace logtail {

@@ -45,20 +45,4 @@ protected:
     std::string mAccessKeySecret;
     std::string mSecToken;
 };
-
-class StaticCredentialsProvider : public CredentialsProvider {
-public:
-    StaticCredentialsProvider(const std::string& accessKeyId, const std::string& accessKeySecret);
-
-    bool GetCredentials(AuthType& type,
-                        std::string& accessKeyId,
-                        std::string& accessKeySecret,
-                        std::string& secToken) const override;
-
-    void SetAuthType(AuthType type);
-
-private:
-    AuthType mAuthType = AuthType::AK;
-};
-
 } // namespace logtail
