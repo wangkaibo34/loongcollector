@@ -27,7 +27,7 @@ public:
     bool GetCredentials(AuthType& type,
                         std::string& accessKeyId,
                         std::string& accessKeySecret,
-                        std::string& secToken) const override;
+                        std::string& secToken) override;
 
     void SetAuthType(AuthType type);
 
