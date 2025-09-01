@@ -23,8 +23,8 @@
 #include <string>
 
 #include "collection_pipeline/queue/SenderQueueItem.h"
-#include "plugin/flusher/sls/StaticCredentialsProvider.h"
 #include "plugin/flusher/sls/SLSResponse.h"
+#include "plugin/flusher/sls/StaticCredentialsProvider.h"
 
 namespace logtail {
 
