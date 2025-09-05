@@ -874,15 +874,15 @@ SLSResponse DiskBufferWriter::SendBufferFileData(const sls_logs::LogtailBufferMe
     string accessKeyId, accessKeySecret, secToken, errorMsg;
     if (!SLSClientManager::GetInstance()->GetAccessKey(
             bufferMeta.aliuid(), type, accessKeyId, accessKeySecret, secToken, errorMsg)) {
-        AlarmManager::GetInstance()->SendAlarmError(GLOBAL_CONFIG_ALARM,
-                                                    "failed to get access key: " + errorMsg,
-                                                    region,
-                                                    bufferMeta.project(),
-                                                    "",
-                                                    bufferMeta.logstore());
 #ifdef __ENTERPRISE__
         if (!EnterpriseSLSClientManager::GetInstance()->GetAccessKeyIfProjectSupportsAnonymousWrite(
                 bufferMeta.project(), type, accessKeyId, accessKeySecret)) {
+            AlarmManager::GetInstance()->SendAlarmError(GLOBAL_CONFIG_ALARM,
+                                                        "failed to get access key: " + errorMsg,
+                                                        region,
+                                                        bufferMeta.project(),
+                                                        "",
+                                                        bufferMeta.logstore());
             SLSResponse response;
             response.mErrorCode = LOGE_UNAUTHORIZED;
             response.mErrorMsg = kAKErrorMsg;
