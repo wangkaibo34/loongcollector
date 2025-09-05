@@ -35,6 +35,7 @@ public:
     void TestGetPreciseTimestampFromLogtailTime();
     void TestBootTimeDiff();
     void TestKernelTimeToUTC();
+    void TestGetTimeStamp();
 };
 
 APSARA_UNIT_TEST_CASE(TimeUtilUnittest, TestDeduceYear, 0);
@@ -272,7 +273,7 @@ void TimeUtilUnittest::TestGetPreciseTimestampFromLogtailTime() {
 }
 
 
-void TimerUnittest::TestGetTimeStamp() {
+void TimeUtilUnittest::TestGetTimeStamp() {
     time_t tm = 1755065971;
     APSARA_TEST_EQUAL(GetTimeStamp(tm, "%Y-%m-%dT%H:%M:%SZ", false), "2025-08-13T06:19:31Z");
 }
