@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 iLogtail Authors
+ * Copyright 2025 iLogtail Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "monitor/task_status_constants/TaskStatusConstants.h"
 
-#pragma once
-
-#include <string>
-
-#include "json/json.h"
+#include "plugin/input/InputStaticFile.h"
 
 namespace logtail {
 
-struct ConfigContainerInfoUpdateCmd {
-    std::string mConfigName; // config name
-    bool mDeleteFlag = false; // if this flag is true, delete the container from this config's ContainerInfo array
-    Json::Value mJsonParams; // jsonParams, json string.
+// Task content keys
+const std::string TASK_CONTENT_KEY_TASK_TYPE = "task_type";
+const std::string TASK_CONTENT_KEY_PROJECT = "project";
+const std::string TASK_CONTENT_KEY_CONFIG_NAME = "config_name";
+const std::string TASK_CONTENT_KEY_STATUS = "status";
+const std::string TASK_CONTENT_KEY_START_TIME = "start_time";
+const std::string TASK_CONTENT_KEY_EXPIRE_TIME = "expire_time";
 
-    ConfigContainerInfoUpdateCmd(const std::string& configName, bool delFlag, const Json::Value& jsonParams)
-        : mConfigName(configName), mDeleteFlag(delFlag), mJsonParams(jsonParams) {}
-};
+// Task types
+const std::string& TASK_TYPE_STATIC_FILE = InputStaticFile::sName;
 
 } // namespace logtail
