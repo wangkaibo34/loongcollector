@@ -80,7 +80,7 @@ bool ParseECSMeta(const std::string& meta, ECSMeta& metaObj) {
     if (doc.isMember(sVswitchIdKey) && doc[sVswitchIdKey].isString()) {
         metaObj.SetVswitchID(doc[sVswitchIdKey].asString());
     }
-    return true;
+    return metaObj.IsValid();
 }
 
 bool ParseCredentials(const Json::Value& doc,
@@ -261,7 +261,7 @@ bool FetchECSMeta(ECSMeta& metaObj) {
         return false;
     }
     metaObj.SetVswitchID(metaVswitch);
-    return metaObj.IsValid();
+    return metaObj.IsAllValid();
 }
 
 bool FetchECSRamCredentials(std::string& accessKeyId,

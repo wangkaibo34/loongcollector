@@ -43,8 +43,7 @@ TEST_F(EcsMetaDataUnittest, TestParseEcsMeta) {
             "instance-id": "i-1234567890abcdef0",
             "region-id": "cn-hangzhou"
         })";
-        APSARA_TEST_TRUE(ParseECSMeta(metaString, ecsMeta));
-        APSARA_TEST_FALSE(ecsMeta.IsValid());
+        APSARA_TEST_FALSE(ParseECSMeta(metaString, ecsMeta));
     }
 
     {
@@ -54,15 +53,13 @@ TEST_F(EcsMetaDataUnittest, TestParseEcsMeta) {
             "owner-account-id": "123456789012345678",
             "region-id": ["cn-hangzhou"]
         })";
-        APSARA_TEST_TRUE(ParseECSMeta(metaString, ecsMeta));
-        APSARA_TEST_FALSE(ecsMeta.IsValid());
+        APSARA_TEST_FALSE(ParseECSMeta(metaString, ecsMeta));
     }
 
     {
         ECSMeta ecsMeta;
         metaString = "{}";
-        APSARA_TEST_TRUE(ParseECSMeta(metaString, ecsMeta));
-        APSARA_TEST_FALSE(ecsMeta.IsValid());
+        APSARA_TEST_FALSE(ParseECSMeta(metaString, ecsMeta));
     }
 
     // Test case for local loading with vpc-id and other fields
