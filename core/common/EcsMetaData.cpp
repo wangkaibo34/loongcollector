@@ -31,6 +31,7 @@ const std::string sAccessKeySecret = "AccessKeySecret";
 const std::string sSecurityToken = "SecurityToken";
 const std::string sExpiration = "Expiration";
 const char* sEcsRamTimeFormat = "%Y-%m-%dT%H:%M:%SZ";
+const std::string sHostName = "hostname";
 const std::string sZoneIdKey = "zone-id";
 const std::string sVpcIdKey = "vpc-id";
 const std::string sVswitchIdKey = "vswitch-id";
@@ -66,10 +67,13 @@ bool ParseECSMeta(const std::string& meta, ECSMeta& metaObj) {
         metaObj.SetRegionID(doc[sRegionIdKey].asString());
     }
 
+    // for load local instance_identity file
+    if (doc.isMember(sHostName) && doc[sHostName].isString()) {
+        metaObj.SetHostName(doc[sHostName].asString());
+    }
     if (doc.isMember(sZoneIdKey) && doc[sZoneIdKey].isString()) {
         metaObj.SetZoneID(doc[sZoneIdKey].asString());
     }
-    // for load local instance_identity file
     if (doc.isMember(sVpcIdKey) && doc[sVpcIdKey].isString()) {
         metaObj.SetVpcID(doc[sVpcIdKey].asString());
     }
@@ -195,6 +199,9 @@ bool FetchEcsMetaData(EcsMetaDataType type, std::string& result, std::string& er
                 url = "http://100.100.100.200/latest/meta-data/ram/security-credentials/" + roleName;
                 break;
             }
+            case EcsMetaDataType::META_HOSTNAME:
+                url = "http://100.100.100.200/latest/meta-data/instance/instance-name";
+                break;
             case EcsMetaDataType::META_VPC:
                 url = "http://100.100.100.200/latest/meta-data/vpc-id";
                 break;
@@ -235,13 +242,17 @@ bool FetchEcsMetaData(EcsMetaDataType type, std::string& result, std::string& er
 }
 
 bool FetchECSMeta(ECSMeta& metaObj) {
-    std::string metaDoc, metaVpc, metaVswitch, errorMsg;
+    std::string metaDoc, metaHostName, metaVpc, metaVswitch, errorMsg;
     if (!FetchEcsMetaData(EcsMetaDataType::META_DOC, metaDoc, errorMsg)) {
         return false;
     }
     if (!ParseECSMeta(metaDoc, metaObj)) {
         return false;
     }
+    if (!FetchEcsMetaData(EcsMetaDataType::META_HOSTNAME, metaHostName, errorMsg)) {
+        return false;
+    }
+    metaObj.SetHostName(metaHostName);
     if (!FetchEcsMetaData(EcsMetaDataType::META_VPC, metaVpc, errorMsg)) {
         return false;
     }

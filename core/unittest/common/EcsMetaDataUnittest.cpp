@@ -43,7 +43,8 @@ TEST_F(EcsMetaDataUnittest, TestParseEcsMeta) {
             "instance-id": "i-1234567890abcdef0",
             "region-id": "cn-hangzhou"
         })";
-        APSARA_TEST_FALSE(ParseECSMeta(metaString, ecsMeta));
+        APSARA_TEST_TRUE(ParseECSMeta(metaString, ecsMeta));
+        APSARA_TEST_FALSE(ecsMeta.IsValid());
     }
 
     {
@@ -53,13 +54,15 @@ TEST_F(EcsMetaDataUnittest, TestParseEcsMeta) {
             "owner-account-id": "123456789012345678",
             "region-id": ["cn-hangzhou"]
         })";
-        APSARA_TEST_FALSE(ParseECSMeta(metaString, ecsMeta));
+        APSARA_TEST_TRUE(ParseECSMeta(metaString, ecsMeta));
+        APSARA_TEST_FALSE(ecsMeta.IsValid());
     }
 
     {
         ECSMeta ecsMeta;
         metaString = "{}";
-        APSARA_TEST_FALSE(ParseECSMeta(metaString, ecsMeta));
+        APSARA_TEST_TRUE(ParseECSMeta(metaString, ecsMeta));
+        APSARA_TEST_FALSE(ecsMeta.IsValid());
     }
 
     // Test case for local loading with vpc-id and other fields
@@ -69,6 +72,7 @@ TEST_F(EcsMetaDataUnittest, TestParseEcsMeta) {
             "instance-id": "i-1234567890abcdef0",
             "owner-account-id": "123456789012345678",
             "region-id": "cn-hangzhou",
+            "hostname": "ecs-ut",
             "zone-id": "cn-hangzhou-h",
             "vpc-id": "vpc-12345678",
             "vswitch-id": "vsw-12345678"
@@ -79,6 +83,7 @@ TEST_F(EcsMetaDataUnittest, TestParseEcsMeta) {
         APSARA_TEST_EQUAL(ecsMeta.GetInstanceID().to_string(), "i-1234567890abcdef0");
         APSARA_TEST_EQUAL(ecsMeta.GetUserID().to_string(), "123456789012345678");
         APSARA_TEST_EQUAL(ecsMeta.GetRegionID().to_string(), "cn-hangzhou");
+        APSARA_TEST_EQUAL(ecsMeta.GetHostName().to_string(), "ecs-ut");
         APSARA_TEST_EQUAL(ecsMeta.GetZoneID().to_string(), "cn-hangzhou-h");
         APSARA_TEST_EQUAL(ecsMeta.GetVpcID().to_string(), "vpc-12345678");
         APSARA_TEST_EQUAL(ecsMeta.GetVswitchID().to_string(), "vsw-12345678");
