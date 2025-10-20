@@ -31,6 +31,9 @@ const std::string sAccessKeySecret = "AccessKeySecret";
 const std::string sSecurityToken = "SecurityToken";
 const std::string sExpiration = "Expiration";
 const char* sEcsRamTimeFormat = "%Y-%m-%dT%H:%M:%SZ";
+const std::string sZoneIdKey = "zone-id";
+const std::string sVpcIdKey = "vpc-id";
+const std::string sVswitchIdKey = "vswitch-id";
 
 namespace logtail {
 size_t FetchECSMetaCallback(char* buffer, size_t size, size_t nmemb, std::string* res) {
@@ -62,7 +65,18 @@ bool ParseECSMeta(const std::string& meta, ECSMeta& metaObj) {
     if (doc.isMember(sRegionIdKey) && doc[sRegionIdKey].isString()) {
         metaObj.SetRegionID(doc[sRegionIdKey].asString());
     }
-    return metaObj.IsValid();
+
+    if (doc.isMember(sZoneIdKey) && doc[sZoneIdKey].isString()) {
+        metaObj.SetZoneID(doc[sZoneIdKey].asString());
+    }
+    // for load local instance_identity file
+    if (doc.isMember(sVpcIdKey) && doc[sVpcIdKey].isString()) {
+        metaObj.SetVpcID(doc[sVpcIdKey].asString());
+    }
+    if (doc.isMember(sVswitchIdKey) && doc[sVswitchIdKey].isString()) {
+        metaObj.SetVswitchID(doc[sVswitchIdKey].asString());
+    }
+    return true;
 }
 
 bool ParseCredentials(const Json::Value& doc,
@@ -145,7 +159,7 @@ bool FetchEcsMetaData(EcsMetaDataType type, std::string& result, std::string& er
         }
         std::string url;
         switch (type) {
-            case EcsMetaDataType::META:
+            case EcsMetaDataType::META_DOC:
                 url = "http://100.100.100.200/latest/dynamic/instance-identity/document";
                 break;
             case EcsMetaDataType::RAM_CREDENTIALS: {
@@ -181,6 +195,12 @@ bool FetchEcsMetaData(EcsMetaDataType type, std::string& result, std::string& er
                 url = "http://100.100.100.200/latest/meta-data/ram/security-credentials/" + roleName;
                 break;
             }
+            case EcsMetaDataType::META_VPC:
+                url = "http://100.100.100.200/latest/meta-data/vpc-id";
+                break;
+            case EcsMetaDataType::META_VSWITCH:
+                url = "http://100.100.100.200/latest/meta-data/vswitch-id";
+                break;
             default:
                 url = "http://100.100.100.200/latest/dynamic/instance-identity/document";
                 break;
@@ -215,13 +235,21 @@ bool FetchEcsMetaData(EcsMetaDataType type, std::string& result, std::string& er
 }
 
 bool FetchECSMeta(ECSMeta& metaObj) {
-    std::string meta, errorMsg;
-    if (!FetchEcsMetaData(EcsMetaDataType::META, meta, errorMsg)) {
+    std::string metaDoc, metaVpc, metaVswitch, errorMsg;
+    if (!FetchEcsMetaData(EcsMetaDataType::META_DOC, metaDoc, errorMsg)) {
         return false;
     }
-    if (!ParseECSMeta(meta, metaObj)) {
+    if (!ParseECSMeta(metaDoc, metaObj)) {
         return false;
     }
+    if (!FetchEcsMetaData(EcsMetaDataType::META_VPC, metaVpc, errorMsg)) {
+        return false;
+    }
+    metaObj.SetVpcID(metaVpc);
+    if (!FetchEcsMetaData(EcsMetaDataType::META_VSWITCH, metaVswitch, errorMsg)) {
+        return false;
+    }
+    metaObj.SetVswitchID(metaVswitch);
     return metaObj.IsValid();
 }
 
