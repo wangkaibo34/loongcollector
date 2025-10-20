@@ -151,6 +151,7 @@ void InstanceIdentityUnittest::TestUpdateECSMeta() {
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsZoneID().to_string(), "cn-hangzhou-h");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVpcID().to_string(), "vpc-12345678");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVswitchID().to_string(), "vsw-12345678");
+        APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->IsECSValid(), true);
     }
     {
         // 更新不合法的ecs meta时，instanceIdentity不更新
