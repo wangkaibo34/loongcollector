@@ -147,7 +147,8 @@ void InstanceIdentityUnittest::TestUpdateECSMeta() {
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsInstanceID().to_string(), "i-1234567890");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsUserID().to_string(), "1234567890");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsRegionID().to_string(), "cn-hangzhou");
-        APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsHostName().to_string(), "launch-advisor-123");
+        APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsHostName().to_string(),
+                          "launch-advisor-123");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsZoneID().to_string(), "cn-hangzhou-h");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVpcID().to_string(), "vpc-12345678");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVswitchID().to_string(), "vsw-12345678");
