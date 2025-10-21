@@ -44,7 +44,6 @@ void InstanceIdentityUnittest::TestECSMeta() {
         meta.SetInstanceID("i-1234567890");
         meta.SetUserID("1234567890");
         meta.SetRegionID("cn-hangzhou");
-        meta.SetHostName("launch-advisor-123");
         meta.SetZoneID("cn-hangzhou-h");
         meta.SetVpcID("vpc-12345678");
         meta.SetVswitchID("vsw-12345678");
@@ -55,8 +54,6 @@ void InstanceIdentityUnittest::TestECSMeta() {
         APSARA_TEST_EQUAL(meta.mUserIDLen, 10);
         APSARA_TEST_EQUAL(meta.GetRegionID().to_string(), "cn-hangzhou");
         APSARA_TEST_EQUAL(meta.mRegionIDLen, 11);
-        APSARA_TEST_EQUAL(meta.GetHostName().to_string(), "launch-advisor-123");
-        APSARA_TEST_EQUAL(meta.mHostNameLen, 18);
         APSARA_TEST_EQUAL(meta.GetZoneID().to_string(), "cn-hangzhou-h");
         APSARA_TEST_EQUAL(meta.mZoneIDLen, 13);
         APSARA_TEST_EQUAL(meta.GetVpcID().to_string(), "vpc-12345678");
@@ -94,7 +91,6 @@ void InstanceIdentityUnittest::TestECSMeta() {
         meta.SetInstanceID(testString.data());
         meta.SetUserID(testString.data());
         meta.SetRegionID(testString.data());
-        meta.SetHostName(testString.data());
         meta.SetZoneID(testString.data());
         meta.SetVpcID(testString.data());
         meta.SetVswitchID(testString.data());
@@ -102,7 +98,6 @@ void InstanceIdentityUnittest::TestECSMeta() {
         APSARA_TEST_EQUAL(meta.GetInstanceID().to_string(), StringView(testString.data(), ID_MAX_LENGTH - 1));
         APSARA_TEST_EQUAL(meta.GetUserID().to_string(), StringView(testString.data(), ID_MAX_LENGTH - 1));
         APSARA_TEST_EQUAL(meta.GetRegionID().to_string(), StringView(testString.data(), ID_MAX_LENGTH - 1));
-        APSARA_TEST_EQUAL(meta.GetHostName().to_string(), StringView(testString.data(), ID_MAX_LENGTH - 1));
         APSARA_TEST_EQUAL(meta.GetZoneID().to_string(), StringView(testString.data(), ID_MAX_LENGTH - 1));
         APSARA_TEST_EQUAL(meta.GetVpcID().to_string(), StringView(testString.data(), ID_MAX_LENGTH - 1));
         APSARA_TEST_EQUAL(meta.GetVswitchID().to_string(), StringView(testString.data(), ID_MAX_LENGTH - 1));
@@ -110,7 +105,6 @@ void InstanceIdentityUnittest::TestECSMeta() {
         APSARA_TEST_EQUAL(meta.GetInstanceID().size(), ID_MAX_LENGTH - 1);
         APSARA_TEST_EQUAL(meta.GetUserID().size(), ID_MAX_LENGTH - 1);
         APSARA_TEST_EQUAL(meta.GetRegionID().size(), ID_MAX_LENGTH - 1);
-        APSARA_TEST_EQUAL(meta.GetHostName().size(), ID_MAX_LENGTH - 1);
         APSARA_TEST_EQUAL(meta.GetZoneID().size(), ID_MAX_LENGTH - 1);
         APSARA_TEST_EQUAL(meta.GetVpcID().size(), ID_MAX_LENGTH - 1);
         APSARA_TEST_EQUAL(meta.GetVswitchID().size(), ID_MAX_LENGTH - 1);
@@ -125,7 +119,6 @@ void InstanceIdentityUnittest::TestUpdateECSMeta() {
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsInstanceID().to_string(), "");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsUserID().to_string(), "");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsRegionID().to_string(), "");
-        APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsHostName().to_string(), "");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsZoneID().to_string(), "");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVpcID().to_string(), "");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVswitchID().to_string(), "");
@@ -137,7 +130,6 @@ void InstanceIdentityUnittest::TestUpdateECSMeta() {
         meta.SetInstanceID("i-1234567890");
         meta.SetUserID("1234567890");
         meta.SetRegionID("cn-hangzhou");
-        meta.SetHostName("launch-advisor-123");
         meta.SetZoneID("cn-hangzhou-h");
         meta.SetVpcID("vpc-12345678");
         meta.SetVswitchID("vsw-12345678");
@@ -147,8 +139,6 @@ void InstanceIdentityUnittest::TestUpdateECSMeta() {
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsInstanceID().to_string(), "i-1234567890");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsUserID().to_string(), "1234567890");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsRegionID().to_string(), "cn-hangzhou");
-        APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsHostName().to_string(),
-                          "launch-advisor-123");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsZoneID().to_string(), "cn-hangzhou-h");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVpcID().to_string(), "vpc-12345678");
         APSARA_TEST_EQUAL(InstanceIdentity::Instance()->GetEntity()->GetEcsVswitchID().to_string(), "vsw-12345678");
