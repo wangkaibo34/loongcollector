@@ -74,7 +74,6 @@ void InstanceIdentityUnittest::TestECSMeta() {
             APSARA_TEST_EQUAL(meta.mInstanceID[i], '\0');
             APSARA_TEST_EQUAL(meta.mUserID[i], '\0');
             APSARA_TEST_EQUAL(meta.mRegionID[i], '\0');
-            APSARA_TEST_EQUAL(meta.mHostName[i], '\0');
             APSARA_TEST_EQUAL(meta.mZoneID[i], '\0');
             APSARA_TEST_EQUAL(meta.mVpcID[i], '\0');
             APSARA_TEST_EQUAL(meta.mVswitchID[i], '\0');

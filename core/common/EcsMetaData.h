@@ -98,9 +98,6 @@ private:
     std::array<char, ID_MAX_LENGTH> mRegionID{};
     size_t mRegionIDLen = (size_t)0;
 
-    std::array<char, ID_MAX_LENGTH> mHostName{};
-    size_t mHostNameLen = (size_t)0;
-
     std::array<char, ID_MAX_LENGTH> mZoneID{};
     size_t mZoneIDLen = (size_t)0;
 
@@ -122,6 +119,10 @@ bool ParseCredentials(const Json::Value& doc,
                       std::string& accessKeySecret,
                       std::string& secToken,
                       int64_t& expTime);
+
+bool FetchToken(std::string& token, std::string& errorMsg);
+
+bool FetchEcsMetaData(EcsMetaDataType type, const std::string& token, std::string& result, std::string& errorMsg);
 
 bool FetchECSMeta(ECSMeta& metaObj);
 
